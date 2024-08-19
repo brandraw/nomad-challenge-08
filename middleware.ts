@@ -1,7 +1,24 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "./lib/session";
+
+const publicRoutes = new Set([
+  "/",
+  "/login",
+  "/signup",
+  "/github/start",
+  "/github/complete",
+]);
 
 export async function middleware(req: NextRequest) {
-  console.log(req.nextUrl.pathname);
+  const session = await getSession();
+  const isLoggedIn = Boolean(session.id);
+  const isPublic = publicRoutes.has(req.nextUrl.pathname);
+
+  if (!isLoggedIn && !isPublic) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

@@ -1,3 +1,4 @@
+import { UserLogout } from "@/lib/user-logout";
 import Link from "next/link";
 
 export function MainHeader() {
@@ -7,13 +8,18 @@ export function MainHeader() {
       <nav>
         <ul className="flex items-center gap-3">
           <li>
-            <Link href="/">Menu01</Link>
+            <Link href="/private">Private</Link>
           </li>
           <li>
             <Link href="/login">Login</Link>
           </li>
           <li>
             <Link href="/signup">Sign Up</Link>
+          </li>
+          <li>
+            <form action={UserLogout}>
+              <button>Log Out</button>
+            </form>
           </li>
         </ul>
       </nav>
