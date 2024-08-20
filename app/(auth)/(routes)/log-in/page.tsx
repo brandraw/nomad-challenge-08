@@ -20,13 +20,6 @@ export default function SignIn() {
           errors={state?.errors?.fieldErrors.email}
         />
         <FormInput
-          placeholder="Username"
-          name="username"
-          type="text"
-          required
-          errors={state?.errors?.fieldErrors.username}
-        />
-        <FormInput
           placeholder="********"
           name="password"
           type="password"

@@ -4,44 +4,13 @@ import { db } from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { UserLogin } from "@/lib/user-login";
+import { redirect } from "next/navigation";
 
 const PasswordRegex = /^(?=.*\d).+$/;
 
 const formSchema = z
   .object({
-    username: z
-      .string()
-      .min(5)
-      .max(10)
-      .trim()
-      .toLowerCase()
-      .refine(async (username) => {
-        const user = await db.user.findUnique({
-          where: {
-            username,
-          },
-          select: {
-            id: true,
-          },
-        });
-
-        return Boolean(user);
-      }, "Username Not Found"),
-    email: z
-      .string()
-      .email()
-      .refine(async (email) => {
-        const user = await db.user.findUnique({
-          where: {
-            email,
-          },
-          select: {
-            id: true,
-          },
-        });
-
-        return Boolean(user);
-      }, "Email Not Found"),
+    email: z.string().toLowerCase().email(),
     password: z.string().min(1),
   })
   .superRefine(async ({ email, password }, ctx) => {
@@ -50,9 +19,21 @@ const formSchema = z
         email,
       },
       select: {
+        id: true,
         password: true,
       },
     });
+
+    if (!user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Email Not Exists",
+        path: ["email"],
+        fatal: true,
+      });
+
+      return z.NEVER;
+    }
 
     const checkPassword = await bcrypt.compare(password, user?.password || "");
     if (!checkPassword) {
@@ -65,6 +46,10 @@ const formSchema = z
 
       return z.NEVER;
     }
+
+    await UserLogin(user.id);
+
+    redirect("/profile");
   });
 
 export async function handleLogin(_: any, formData: FormData) {
@@ -82,17 +67,6 @@ export async function handleLogin(_: any, formData: FormData) {
       errors: result.error.flatten(),
     };
   }
-
-  const user = await db.user.findUnique({
-    where: {
-      username: result.data.username,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  await UserLogin(user!.id);
 
   return {
     success: result.success,

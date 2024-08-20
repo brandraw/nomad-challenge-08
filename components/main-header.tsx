@@ -1,28 +1,15 @@
-import { UserLogout } from "@/lib/user-logout";
+import { getSession } from "@/lib/session";
 import Link from "next/link";
+import MainNav from "./main-nav";
 
-export function MainHeader() {
+export async function MainHeader() {
+  const session = await getSession();
+  const isLoggedIn = Boolean(session.id);
+
   return (
     <header className="flex items-center justify-between bg-slate-50 p-5 text-sm">
       <Link href="/">Home</Link>
-      <nav>
-        <ul className="flex items-center gap-3">
-          <li>
-            <Link href="/private">Private</Link>
-          </li>
-          <li>
-            <Link href="/login">Login</Link>
-          </li>
-          <li>
-            <Link href="/signup">Sign Up</Link>
-          </li>
-          <li>
-            <form action={UserLogout}>
-              <button>Log Out</button>
-            </form>
-          </li>
-        </ul>
-      </nav>
+      <MainNav isLoggedIn={isLoggedIn} />
     </header>
   );
 }

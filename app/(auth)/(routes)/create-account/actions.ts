@@ -3,6 +3,8 @@
 import { db } from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
+import { UserLogin } from "@/lib/user-login";
+import { redirect } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -72,4 +74,8 @@ export async function handleSignup(_: any, formData: FormData) {
       id: true,
     },
   });
+
+  await UserLogin(user.id);
+
+  redirect("/profile");
 }
