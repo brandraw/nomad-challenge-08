@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "./lib/session";
 
 const publicRoutes = new Set([
-  "/",
   "/log-in",
   "/create-account",
   "/github/start",
@@ -23,7 +22,7 @@ export async function middleware(req: NextRequest) {
   const isLogoutRoute = onlyLogoutRoutes.has(req.nextUrl.pathname);
 
   if (!isLoggedIn && !isPublic) {
-    return NextResponse.redirect(new URL("/", req.url));
+    return NextResponse.redirect(new URL("/log-in", req.url));
   }
 
   if (isLoggedIn && isLogoutRoute) {
