@@ -1,3 +1,4 @@
+import AddTweet from "@/components/add-tweet";
 import { db } from "@/lib/db";
 import Link from "next/link";
 
@@ -29,16 +30,17 @@ export default async function Home() {
   }
 
   return (
-    <main className="p-5">
-      <div>Tweets</div>
+    <main className="p-5 space-y-3">
+      <AddTweet />
       <div className="flex flex-col gap-2">
         {tweets.map((a, i) => (
           <Link
             href={`/tweets/${a.id}`}
             key={a.id}
-            className="border p-5 rounded-lg shadow-sm"
+            className="bg-orange-50/50 border p-5 rounded-lg shadow-sm flex items-center justify-between hover:-translate-y-1 transition"
           >
-            {a.tweet}
+            <div>{a.tweet}</div>
+            <div className="text-xs text-slate-500">{a.user.username}</div>
           </Link>
         ))}
       </div>
