@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/session";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 const schema = z.object({
@@ -34,4 +34,33 @@ export async function handleAddTweet(_: any, formData: FormData) {
   });
 
   revalidatePath("/");
+}
+
+export async function likeTweet(tweetId: number) {
+  await new Promise((r) => setTimeout(r, 500));
+  const session = await getSession();
+  try {
+    await db.like.create({
+      data: {
+        tweetId,
+        userId: session.id!,
+      },
+    });
+    revalidateTag(`like-status-${tweetId}`);
+  } catch (error) {}
+}
+
+export async function disLikeTweet(tweetId: number) {
+  const session = await getSession();
+  try {
+    await db.like.delete({
+      where: {
+        id: {
+          tweetId,
+          userId: session.id!,
+        },
+      },
+    });
+    revalidateTag(`like-status-${tweetId}`);
+  } catch (error) {}
 }

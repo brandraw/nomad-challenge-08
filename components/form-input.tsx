@@ -1,6 +1,6 @@
 "use client";
 
-import { InputHTMLAttributes } from "react";
+import { forwardRef, InputHTMLAttributes } from "react";
 import { useFormStatus } from "react-dom";
 
 interface InputProps {
@@ -9,12 +9,10 @@ interface InputProps {
   errors?: string[];
 }
 
-export function FormInput({
-  label,
-  name,
-  errors = [],
-  ...rest
-}: InputProps & InputHTMLAttributes<HTMLInputElement>) {
+export const FormInput = forwardRef<
+  HTMLInputElement,
+  InputProps & InputHTMLAttributes<HTMLInputElement>
+>(({ label, name, errors = [], ...rest }, ref) => {
   const { pending } = useFormStatus();
 
   return (
@@ -32,6 +30,7 @@ export function FormInput({
         className={`border rounded-md py-2 px-3 placeholder:text-sm outline-none focus:border-orange-400 ${
           errors.length !== 0 ? "border-red-500" : ""
         }`}
+        ref={ref}
       />
       {errors.map((a, i) => (
         <div key={i} className="text-xs text-red-500">
@@ -40,4 +39,4 @@ export function FormInput({
       ))}
     </div>
   );
-}
+});

@@ -23,9 +23,10 @@ model User {
   bio       String?
   Tweet     Tweet[]
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
   Like       Like[]
+  Comment    Comment[]
 }
 
 model Tweet {
@@ -35,9 +36,10 @@ model Tweet {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int
-  Like   Like[]
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int
+  Like    Like[]
+  Comment Comment[]
 }
 
 model Like {
@@ -49,4 +51,18 @@ model Like {
   created_at DateTime @default(now())
 
   @@id(name: "id", [userId, tweetId])
+}
+
+model Comment {
+  id      Int    @id @default(autoincrement())
+  payload String
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  tweet   Tweet @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  tweetId Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
