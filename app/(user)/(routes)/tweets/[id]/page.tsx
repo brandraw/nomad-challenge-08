@@ -104,6 +104,7 @@ const getComments = async (tweetId: number) => {
       created_at: "desc",
     },
     select: {
+      id: true,
       payload: true,
       user: {
         select: {

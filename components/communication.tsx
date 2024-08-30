@@ -14,6 +14,7 @@ interface CommunicationProps {
     isLiked: boolean;
   };
   comments?: {
+    id: number;
     payload: string;
     user: {
       username: string;
@@ -49,9 +50,16 @@ export function Communication({
 
   const [commentState, commentReducer] = useOptimistic(
     comments,
-    (prevState, payload: { payload: string; user: { username: string } }) => {
+    (
+      prevState,
+      payload: { id: number; payload: string; user: { username: string } }
+    ) => {
       return [
-        { payload: payload.payload, user: { username: payload.user.username } },
+        {
+          id: 0,
+          payload: payload.payload,
+          user: { username: payload.user.username },
+        },
         ...prevState,
       ];
     }
@@ -84,6 +92,7 @@ export function Communication({
           ref={formRef}
           action={async (formData) => {
             commentReducer({
+              id: 0,
               payload: inputValue,
               user: {
                 username,
@@ -116,7 +125,7 @@ export function Communication({
       )}
       <div className="space-y-2">
         {commentState.map((comment) => (
-          <div className="space-y-2 border p-3 rounded-md">
+          <div key={comment.id} className="space-y-2 border p-3 rounded-md">
             <div className="text-sm text-muted-foreground">
               {comment.user.username}
             </div>

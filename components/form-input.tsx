@@ -40,3 +40,5 @@ export const FormInput = forwardRef<
     </div>
   );
 });
+
+FormInput.displayName = "FormInput";
