@@ -10,8 +10,6 @@ const formSchema = z.object({
 });
 
 export async function handleComment(formData: FormData, tweetId: number) {
-  await new Promise((r) => setTimeout(r, 5000));
-
   const data = {
     comment: formData.get("comment"),
   };

@@ -10,8 +10,6 @@ const schema = z.object({
 });
 
 export async function handleAddTweet(_: any, formData: FormData) {
-  await new Promise((r) => setTimeout(r, 500));
-
   const data = {
     tweet: formData.get("tweet"),
   };
@@ -37,7 +35,6 @@ export async function handleAddTweet(_: any, formData: FormData) {
 }
 
 export async function likeTweet(tweetId: number) {
-  await new Promise((r) => setTimeout(r, 500));
   const session = await getSession();
   try {
     await db.like.create({

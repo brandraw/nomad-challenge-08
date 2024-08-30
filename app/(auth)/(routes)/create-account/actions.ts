@@ -48,8 +48,6 @@ const formSchema = z
   });
 
 export async function handleSignup(_: any, formData: FormData) {
-  await new Promise((r) => setTimeout(r, 500));
-
   const data = {
     username: formData.get("username"),
     email: formData.get("email"),
